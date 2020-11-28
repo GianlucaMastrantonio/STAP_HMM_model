@@ -1,0 +1,10 @@
+[deps]
+BayesianAnimalMovementModels = "82c5b9e5-9f7e-4e01-aed5-f7120353cc61"
+CompilerSupportLibraries_jll = "e66e0078-7015-5450-92f7-15fbd957f2ae"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+PDMats = "90014a1f-27ba-587c-ab20-58faa44d9150"
+Profile = "9abbd945-dff8-562f-b5e8-e1ebf5ef1b79"
+ProfileView = "c46f51b8-102a-5cf2-8d2c-8597cb0e0da7"
+RCall = "6f49c342-dc21-5d91-9882-a32aef131414"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+Traceur = "37b6cedf-1f77-55f8-9503-c64b63398394"
