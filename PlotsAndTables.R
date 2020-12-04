@@ -42,7 +42,15 @@ dmnorm=function (x, mean = rep(0, d), varcov, log = FALSE)
         logPDF
     else exp(logPDF)
 }
-
+rmnorm=function(n = 1, mean = rep(0, d), varcov)
+{
+   d <- if (is.matrix(varcov))
+       ncol(varcov)
+   else 1
+   z <- matrix(rnorm(n * d), n, d) %*% chol(varcov)
+   y <- t(mean + t(z))
+   return(y)
+}
 
 ### ### ### ### ### ###
 ### Colors palette
@@ -388,6 +396,15 @@ for(i in 1:5)
     legend.position = "none"
   )+xlim(min(DataZ[,1], na.rm=T), max(DataZ[,1], na.rm=T))+ylim(min(DataZ[,2], na.rm=T), max(DataZ[,2], na.rm=T))
   p
+  if((i==4) | (i==5))
+  {
+    Xp = mean(ModelOUT$mu0[,1,WM[i]])
+    Yp = mean(ModelOUT$mu0[,2,WM[i]])
+    p = p +annotate("point", x = Xp, y = Yp, colour = "black", size=5)
+    #+
+    #annotate("text", x = Xp, y = Yp+0.4, label="Attractive-point", size=15)
+  }
+
   pdf(paste(PLOT_DIRPLOT ,"DataPost",i,".pdf",sep=""))
   print(p)
   dev.off()
@@ -970,5 +987,73 @@ P = ggplot(ld, aes(x=x,y=y))+geom_line()+theme(
 )+ylab("Density")+xlab("Turning-angle")+xlim(c(-pi,pi))+ylim(c(0,0.32))
 P
 pdf(paste(PLOT_DIRPLOT ,"ObsTurning_k2.pdf",sep=""))
+print(P)
+dev.off()
+
+
+
+load(paste(PLOT_DIRDATA , MOD_OU_NAME,sep=""))
+WM = c(39,136,14,127,23)
+
+s1    = mean(ModelOUT$sigma[,1,WM[1]])
+s12   = mean(ModelOUT$sigma[,2,WM[1]])
+s2    = mean(ModelOUT$sigma[,4,WM[1]])
+
+X = rmnorm(50000, c(0,0), matrix(c(s1,s12,s12,s2), ncol=2))
+X = apply(X,2,cumsum)
+colnames(X) = c("x","y")
+X = data.frame(X)
+dataDog  = prepData(X,type="UTM", LLangle=F)
+
+
+# DataCoords_2 = as.data.frame(DataCoords)
+# colnames(DataCoords_2) = c("x","y")
+# dataDog  <- prepData(DataCoords_2,type="UTM",LLangle=F)
+
+###  usare l$y*3 anche nelle figure dei dati osservati
+dataDog2 = rbind(dataDog[,-1] -2*pi,dataDog[,-1],dataDog[,-1]+2*pi)
+l <- density(dataDog2$angle,na.rm=T, bw=0.3)
+ld =data.frame(x=l$x,y=l$y*3)
+P = ggplot(ld, aes(x=x,y=y))+geom_line()+theme(
+  axis.text.x = element_text(face="bold",size=25),
+  axis.text.y = element_text(face="bold",size=25),
+  axis.title.x = element_text(face="bold",size=25),
+  axis.title.y = element_text(face="bold",size=25)
+)+ylab("Density")+xlab("Turning-angle")+xlim(c(-pi,pi))+ylim(c(0,0.32))
+P
+pdf(paste(PLOT_DIRPLOT ,"ObsTurning_k1_OU.pdf",sep=""))
+print(P)
+dev.off()
+
+
+
+
+s1    = mean(ModelOUT$sigma[,1,WM[2]])
+s12   = mean(ModelOUT$sigma[,2,WM[2]])
+s2    = mean(ModelOUT$sigma[,4,WM[2]])
+
+X = rmnorm(50000, c(0,0), matrix(c(s1,s12,s12,s2), ncol=2))
+X = apply(X,2,cumsum)
+colnames(X) = c("x","y")
+X = data.frame(X)
+dataDog  = prepData(X,type="UTM", LLangle=F)
+
+
+# DataCoords_2 = as.data.frame(DataCoords)
+# colnames(DataCoords_2) = c("x","y")
+# dataDog  <- prepData(DataCoords_2,type="UTM",LLangle=F)
+
+###  usare l$y*3 anche nelle figure dei dati osservati
+dataDog2 = rbind(dataDog[,-1] -2*pi,dataDog[,-1],dataDog[,-1]+2*pi)
+l <- density(dataDog2$angle,na.rm=T, bw=0.3)
+ld =data.frame(x=l$x,y=l$y*3)
+P = ggplot(ld, aes(x=x,y=y))+geom_line()+theme(
+  axis.text.x = element_text(face="bold",size=25),
+  axis.text.y = element_text(face="bold",size=25),
+  axis.title.x = element_text(face="bold",size=25),
+  axis.title.y = element_text(face="bold",size=25)
+)+ylab("Density")+xlab("Turning-angle")+xlim(c(-pi,pi))+ylim(c(0,0.32))
+P
+pdf(paste(PLOT_DIRPLOT ,"ObsTurning_k2_OU.pdf",sep=""))
 print(P)
 dev.off()
