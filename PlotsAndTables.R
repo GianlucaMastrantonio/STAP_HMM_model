@@ -2,7 +2,7 @@
 ####  Values that must be changed
 #### #### #### #### #### #### #### ####
 rm(list=ls())
-PLOT_DIRDATA  = "/Users/gianlucamastrantonio/Dropbox (Politecnico di Torino Staff)/lavori/sheepdog/analisi/plot/"
+PLOT_DIRDATA  = ""
 PLOT_DIRPLOT  = ""
 MOD_STAP_NAME = "Mod2_STAP"
 MOD_BRW_NAME   = "Mod2_OU"
