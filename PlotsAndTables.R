@@ -3,7 +3,7 @@
 #### #### #### #### #### #### #### ####
 rm(list=ls())
 PLOT_DIRDATA  = "/Users/gianlucamastrantonio/Dropbox (Politecnico di Torino Staff)/lavori/sheepdog/analisi/plot/"
-PLOT_DIRPLOT  = "/Users/gianlucamastrantonio/Dropbox (Politecnico di Torino Staff)/lavori/sheepdog/tex/"
+PLOT_DIRPLOT  = ""
 MOD_STAP_NAME = "Mod2_STAP"
 MOD_BRW_NAME   = "Mod2_OU"
 MOD_CRW_NAME   = "Mod2_ST"
