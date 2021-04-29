@@ -2,9 +2,9 @@
 ####  Values that must be changed
 #### #### #### #### #### #### #### ####
 
-IndModel = [ ]# [1] for STAP, [2] for OU, [3] for ST
-NAME 	= ""
-DIR  	= ""
+IndModel = [3]# [1] for STAP, [2] for BRW, [3] for CRW
+NAME 	= "Mod2"
+DIR  	= "/Users/gianlucamastrantonio/Dropbox (Politecnico di Torino Staff)/lavori/sheepdog/github repo/"
 
 ##### Packages
 using BayesianAnimalMovementModels
@@ -27,7 +27,7 @@ Random.seed!(Seed)
 IndAn   	= [9;10]
 rhoTT 		= [0.5;0.0;1.0]
 sampleTT 	= [true;false;false]
-nameTT   	= ["_STAP";"_OU"; "_ST"]
+nameTT   	= ["_STAP";"_BRW"; "_CRW"]
 
 ## Load data from R
 @rput DIRDATA

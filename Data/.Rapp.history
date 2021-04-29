@@ -1,0 +1,59 @@
+load("/Users/gianlucamastrantonio/Dropbox (Politecnico di Torino Staff)/lavori/sheepdog/github repo/Data/seal908_data.RData")
+ls()
+summary(complete_data)
+predicted_times
+plot(predicted_times)
+points(complete_data[,3], col=2)
+predicted_times
+points(complete_data[,3], col=2)
+dim(complete_data)
+diff(predicted_times)
+initial_values$gs initial_values$gs
+initial_values$gs
+ls()
+DIR  	= "/Users/gianlucamastrantonio/Dropbox (Politecnico di Torino Staff)/lavori/sheepdog/github repo/"#
+DIRDATA = paste(DIR,"Data/", sep="")#
+DIROUT  = paste(DIR,"out/", sep="")
+load(paste(DIRDATA,"initial_values.RData",sep=""))
+initial_values$gs
+table(names(initial_values$gs))
+ls()
+length(predicted_times)
+names(initial_values$gs)
+names(initial_values$gs)[1:20]
+ncentres
+ncentre
+names(initial_values$gs)[1:100]
+initial_values$gs[13:15]
+initial_values$gs[13:20]
+1/initial_values$gs[13:20]
+table(names(initial_values$gs))
+N
+table(gs<0)
+table(initial_values$gs<0)
+initial_values$gs
+plot(initial_values$gs)
+names()gc
+names(gc)
+names(gs)
+names(initial_values$gs)
+load("/Users/gianlucamastrantonio/Dropbox (Politecnico di Torino Staff)/lavori/sheepdog/github repo/Data/Data3.Rdata")
+ls()
+save(DataAn3,file="Data3")
+save(DataAn3,file="Data3.Rdata")
+save(DataAn3,file="Data_3.Rdata")
+read.csv(DataAn3,file="Data_3.csv")
+write.csv(DataAn3,file="Data_3.csv")
+anyNA
+function (x) #
+{#
+    any(is.na(x))#
+  }
+any
+function (x) #
+{#
+    any(is.na(x))#
+  }anyNA
+anyNA
+?any
+270*0.75
