@@ -4,9 +4,9 @@
 rm(list=ls())
 PLOT_DIRDATA  = ""
 PLOT_DIRPLOT  = ""
-MOD_STAP_NAME = "Mod2_STAP"
-MOD_BRW_NAME   = "Mod2_OU"
-MOD_CRW_NAME   = "Mod2_ST"
+MOD_STAP_NAME = ""
+MOD_BRW_NAME   = ""
+MOD_CRW_NAME   = ""
 
 #MOD_SIM_NAME = "Sim"
 
