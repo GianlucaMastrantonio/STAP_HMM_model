@@ -3,8 +3,8 @@
 #### #### #### #### #### #### #### ####
 
 IndModel = [3]# [1] for STAP, [2] for BRW, [3] for CRW
-NAME 	= "Mod2"
-DIR  	= "/Users/gianlucamastrantonio/Dropbox (Politecnico di Torino Staff)/lavori/sheepdog/github repo/"
+NAME 	= ""
+DIR  	= ""
 
 ##### Packages
 using BayesianAnimalMovementModels

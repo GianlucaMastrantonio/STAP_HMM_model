@@ -23,6 +23,8 @@ out/Mod_RJMCMC_5_0.pdf
 out/Mod_RJMCMC_5_0.Rdata
 out/plot.pdf
 out/SSJ.Rdata
+Sim.sh
+Sim/
 RJMCMCFARM/LANCIO.txt
 RJMCMCFARM/RJMCMC_101.R
 RJMCMCFARM/RJMCMC_101.sh
