@@ -16,6 +16,7 @@ out/Mod1SSJ.Rdata
 out/Mod2_OU.pdf
 out/Mod2_ST.pdf
 out/Mod2_STAP.pdf
+PlotsAndTables_SAVE.R
 out/Mod_RJMCMC_0_5.Rdata
 out/Mod_RJMCMC_1_4.pdf
 out/Mod_RJMCMC_1_4.Rdata
@@ -25,6 +26,7 @@ out/plot.pdf
 out/SSJ.Rdata
 Sim.sh
 Sim/
+Sim_Bimodality.R
 RJMCMCFARM/LANCIO.txt
 RJMCMCFARM/RJMCMC_101.R
 RJMCMCFARM/RJMCMC_101.sh

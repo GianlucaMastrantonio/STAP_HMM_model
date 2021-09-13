@@ -10,19 +10,6 @@ MOD_CRW_NAME   = ""
 
 
 
-### ### ### ### ### ### ### ### ### ### ###
-### CANCELLARE
-PLOT_DIRDATA  = "/Users/gianlucamastrantonio/Dropbox (Politecnico di Torino Staff)/lavori/sheepdog/analisi/plot/"
-PLOT_DIRPLOT  = "/Users/gianlucamastrantonio/Dropbox (Politecnico di Torino Staff)/lavori/sheepdog/tex/"
-
-
-
-
-MOD_STAP_NAME = "Mod2_STAP"
-MOD_BRW_NAME   = "Mod2_OU"
-MOD_CRW_NAME   = "Mod2_ST"
-### ### ### ### ### ### ### ### ### ### ### ### ### ###
-
 #### #### #### #### #### #### #### ####
 ####  Libraries
 #### #### #### #### #### #### #### ####
@@ -927,248 +914,55 @@ print(p)
 dev.off()
 
 
-##### Movement prediction
+####
+library(ggplot2)
+library(magick)
+library(png)
+
+#image = image_read(paste(PLOT_DIRPLOT,"PlosOne.png",sep=""))
+
+img =  readPNG(paste(PLOT_DIRPLOT,"PlosOne.png",sep=""))
+# plot with picture as layer
+
+
+
+
+p = ggplot(DataZ, aes(Longitude, Latitude))
+p = p+annotation_raster(img, xmin = -9.45, xmax = 5.8, ymin = -7, ymax = 5.2) +
+#geom_path(size = 0.1)+
+geom_point(size = 0.01, col="red")
+p = p+theme(
+  axis.text.x = element_text(face="bold",size=25),
+  axis.text.y = element_text(face="bold",size=25),
+  axis.title.x = element_text(face="bold",size=25),
+  axis.title.y = element_text(face="bold",size=25)
+)
+p+xlim(c(-8.9,4.8))+ylim(c(-6.5,4.2))
+
+
+p = ggplot(DataZ, aes(Longitude, Latitude))
+p = p+annotation_raster(img, xmin = -9.45, xmax = 5.8, ymin = -7, ymax = 5.2)
+#geom_path(size = 0.1)+
+#geom_point(size = 0.01, col="green")
+p = p+theme(
+  axis.text.x = element_text(face="bold",size=25),
+  axis.text.y = element_text(face="bold",size=25),
+  axis.title.x = element_text(face="bold",size=25),
+  axis.title.y = element_text(face="bold",size=25)
+)
+p+xlim(c(-8.8,4.8))+ylim(c(-6.5,4.2))
+
+pdf(paste(PLOT_DIRPLOT ,"PlosOne1.pdf",sep=""))
+print(p+xlim(c(-8.8,4.8))+ylim(c(-6.5,4.2)))
+dev.off()
 #
-# Mu = matrix(c(0,0), ncol=1)/5
-# Nu = matrix(c(4,0), ncol=1)/5
-# tau = 0.25
-# sigma21 = 0.05
-# sigma22 = 0.5
-# corr   = -0.8
-# rho = c(0.33,0.66)
-# Sigma = matrix(c(sigma21,(sigma21*sigma22)^0.5*corr,(sigma21*sigma22)^0.5*corr,sigma22), ncol=2)/5^2
-#
-# angle = rev(rep(seq(0,-pi,by=-pi/4), each=5))
-# xseq = yseq = seq(-20,20, by=10)/5
-# xseq = yseq = seq(-20,20, by=10)/5
-# Grid = expand.grid(xseq, yseq)
-# colnames(Grid) = c("Longitude", "Latitude")
-#
-# # BRW
-#
-#
-#
-#
-# P = qplot(c(0),0,geom="line", xlab="",ylab="")+theme(axis.text=element_text(size=25),
-#         axis.title=element_text(size=28,face="bold"))+ coord_fixed(ratio=1)
-#
-#
-#
-# meanPlot = Grid[,]
-# meanPlot[,1] = Grid[,1]+tau*(Mu[1,1]-Grid[,1])
-# meanPlot[,2] = Grid[,2]+tau*(Mu[2,1]-Grid[,2])
-#
-# P1 = P+geom_point( aes(Grid$Longitude, Grid$Latitude))+geom_point()
-# #geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = meanPlot[,1], yend = meanPlot[,2]),
-#                  # arrow = arrow(length = unit(0.2, "cm")),color=cbPalette[1])
-#
-# meanPlot_2 = meanPlot
-#
-# i = 1
-# SigmaPlot = Sigma
-# app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-# app[,1] = app[,1]+meanPlot[i,1]
-# app[,2] = app[,2]+meanPlot[i,2]
-# ell = app
-# for(i in 2:nrow(Grid))
-# {
-#
-#     app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-#     app[,1] = app[,1]+meanPlot[i,1]
-#     app[,2] = app[,2]+meanPlot[i,2]
-#     ell = rbind(ell,NA, app)
-#
-# }
-# ell_BRW = ell
-# P_BWR = P1
-#
-# # CRW
-#
-#
-# #P = qplot(c(0),0,geom="line", xlab="",ylab="")+theme(axis.text=element_text(size=25),
-#         #axis.title=element_text(size=28,face="bold"))+scale_colour_continuous(guide = FALSE)+theme(legend.position="none")+ coord_fixed(ratio=1)
-#
-# P1 = P_BWR
-#
-#
-# i = 1
-# arr = Grid
-#
-# ang = angle[i]
-# R = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# muPlot = R%*%Nu
-# arr[i,] = arr[i,]+muPlot
-# SigmaPlot = R%*%Sigma%*%t(R)
-# app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-# app[,1] = app[,1]+Grid[i,1]+muPlot[1,1]
-# app[,2] = app[,2]+Grid[i,2]+muPlot[2,1]
-# ell = app
-# for(i in 2:nrow(Grid))
-# {
-#     ang = angle[i]
-#     R = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-#     muPlot = R%*%Nu
-#     SigmaPlot = R%*%Sigma%*%t(R)
-#     arr[i,] = arr[i,]+muPlot
-#     app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-#     app[,1] = app[,1]+Grid[i,1]+muPlot[1,1]
-#     app[,2] = app[,2]+Grid[i,2]+muPlot[2,1]
-#     ell = rbind(ell,NA, app)
-#
-# }
-#
-# cc = factor(c(1,2,3))
-#
-#
-#
-#
-# col_ell_1 = rep(cbPalette[1], nrow(ell_BRW))
-# col_ell_2 = rep(cbPalette[3], nrow(ell))
-# ell = rbind(ell,NA, ell_BRW)
-#
-# P4 = P1 + geom_path(aes(x=ell[,1],y=ell[,2], color=c(col_ell_2,NA,col_ell_1)), color=c(col_ell_2,NA,col_ell_1), size = 1)
-#
-#
-# i = 1
-# ang = angle[i]
-# R = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# arr2 = Grid
-# muPlot = Grid[i,]+(R)%*%matrix(c(-3/5,0), ncol=1)
-# arr2[i,] = muPlot
-# for(i in 2:nrow(Grid))
-# {
-#     ang = angle[i]
-#     R = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-#     muPlot = Grid[i,]+(R)%*%matrix(c(-3/5,0), ncol=1)
-#     arr2[i,] = muPlot
-# }
-# P6 = P4 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = arr[,1], yend = arr[,2], color="CRW"),
-#                   arrow = arrow(length = unit(0.2, "cm")))
-# P7 = P6 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = meanPlot_2[,1], yend = meanPlot_2[,2], color="BRW"),
-#                 arrow = arrow(length = unit(0.2, "cm")))
-#
-# P8 = P7+geom_segment(aes(x = arr2[,1], y = arr2[,2], xend = Grid[,1], yend = Grid[,2], color= "Prev. Dir."),arrow = arrow(length = unit(0.2, "cm")))
-#
-# PTOT =P8+scale_color_manual(values = cbPalette[c(1,3,4)],name="Velocity")+ theme(legend.text=element_text(size=13),legend.title=element_text(size=18))
-#
-#
-#
-# pdf(paste(PLOT_DIRPLOT,"EsMovdd.pdf",sep=""),width=7, height=7)
-# PTOT+xlim(c(-26/5,26/5))+ylim(c(-26/5,26/5))
-# dev.off()
-#
-#
-# ### ### ### ### ###
-# ### STAP
-# ### ### ### ### ###
-#
-#
-#
-# P = qplot(c(0),0,geom="line", xlab="",ylab="")+theme(axis.text=element_text(size=25),
-#         axis.title=element_text(size=28,face="bold"))+ coord_fixed(ratio=1)
-#
-#
-#
-# meanPlot = Grid[,]
-# meanPlot[,1] = Grid[,1]+tau*(Mu[1,1]-Grid[,1])
-# meanPlot[,2] = Grid[,2]+tau*(Mu[2,1]-Grid[,2])
-#
-# P1 = P+geom_point( aes(Grid$Longitude, Grid$Latitude))+geom_point()
-# #geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = meanPlot[,1], yend = meanPlot[,2]),
-#                  # arrow = arrow(length = unit(0.2, "cm")),color=cbPalette[1])
-#
-# j=1
-# i = 1
-# arr = Grid
-# ang = angle[i]
-# R = matrix(c(cos(rho[j]*ang), sin(rho[j]*ang), -sin(rho[j]*ang), cos(rho[j]*ang)), ncol=2)
-# R2 = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# muPlot =  (1-rho[j])*tau*(0-Grid[i,])+ rho[j]*R2%*%Nu
-# arr[i,] = arr[i,]+muPlot
-# SigmaPlot = R%*%Sigma%*%t(R)
-# app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-# app[,1] = app[,1]+Grid[i,1]+muPlot[1,1]
-# app[,2] = app[,2]+Grid[i,2]+muPlot[1,2]
-# ell = app
-# for(i in 2:nrow(Grid))
-# {
-#     ang = angle[i]
-#     R = matrix(c(cos(rho[j]*ang), sin(rho[j]*ang), -sin(rho[j]*ang), cos(rho[j]*ang)), ncol=2)
-#     R2 = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-#     muPlot =  (1-rho[j])*tau*(0-Grid[i,])+ rho[j]*R2%*%Nu
-#     SigmaPlot = R%*%Sigma%*%t(R)
-#     arr[i,] = arr[i,]+muPlot
-#     app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-#     app[,1] = app[,1]+Grid[i,1]+muPlot[1,1]
-#     app[,2] = app[,2]+Grid[i,2]+muPlot[1,2]
-#     ell = rbind(ell,NA, app)
-#
-# }
-# ell_2 = ell
-# arr_2 = arr
-# muPlot_2 = arr
-# j=2
-# i = 1
-# arr = Grid
-# ang = angle[i]
-# R = matrix(c(cos(rho[j]*ang), sin(rho[j]*ang), -sin(rho[j]*ang), cos(rho[j]*ang)), ncol=2)
-# R2 = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# muPlot =  (1-rho[j])*tau*(0-Grid[i,])+ rho[j]*R2%*%Nu
-# arr[i,] = arr[i,]+muPlot
-# SigmaPlot = R%*%Sigma%*%t(R)
-# app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-# app[,1] = app[,1]+Grid[i,1]+muPlot[1,1]
-# app[,2] = app[,2]+Grid[i,2]+muPlot[1,2]
-# ell = app
-# for(i in 2:nrow(Grid))
-# {
-#     ang = angle[i]
-#     R = matrix(c(cos(rho[j]*ang), sin(rho[j]*ang), -sin(rho[j]*ang), cos(rho[j]*ang)), ncol=2)
-#     R2 = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-#     muPlot =  (1-rho[j])*tau*(0-Grid[i,])+ rho[j]*R2%*%Nu
-#     SigmaPlot = R%*%Sigma%*%t(R)
-#     arr[i,] = arr[i,]+muPlot
-#     app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-#     app[,1] = app[,1]+Grid[i,1]+muPlot[1,1]
-#     app[,2] = app[,2]+Grid[i,2]+muPlot[1,2]
-#     ell = rbind(ell,NA, app)
-#
-# }
-#
-# col_ell_1 = rep(cbPalette[1], nrow(ell_2))
-# col_ell_2 = rep(cbPalette[3], nrow(ell))
-# ell = rbind(ell,NA, ell_2)
-#
-# P4 = P1 + geom_path(aes(x=ell[,1],y=ell[,2], color=c(col_ell_2,NA,col_ell_1)), color=c(col_ell_2,NA,col_ell_1), size = 1)
-#
-#
-# i = 1
-# ang = angle[i]
-# R = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# arr2 = Grid
-# muPlot = Grid[i,]+(R)%*%matrix(c(-3/5,0), ncol=1)
-# arr2[i,] = muPlot
-# for(i in 2:nrow(Grid))
-# {
-#     ang = angle[i]
-#     R = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-#     muPlot = Grid[i,]+(R)%*%matrix(c(-3/5,0), ncol=1)
-#     arr2[i,] = muPlot
-# }
-# P6 = P4 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = arr[,1], yend = arr[,2], color="2"),
-#                   arrow = arrow(length = unit(0.2, "cm")))
-# P7 = P6 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = muPlot_2[,1], yend = muPlot_2[,2], color="1"),
-#                 arrow = arrow(length = unit(0.2, "cm")))
-#
-# P8 = P7+geom_segment(aes(x = arr2[,1], y = arr2[,2], xend = Grid[,1], yend = Grid[,2], color= "3"),arrow = arrow(length = unit(0.2, "cm")))
-#
-# PTOT =P8+scale_color_manual(values = cbPalette[c(1,3,4)],name="Velocity", labels=c(expression(rho ~"=1/3"),expression(rho ~"=2/3"),"Prev. Dir"))+ theme(legend.text=element_text(size=13),legend.title=element_text(size=18))
-#
-#
-#
-# pdf(paste(PLOT_DIRPLOT,"EsMov2ddd.pdf",sep=""),width=7, height=7)
-# PTOT+xlim(c(-26/5,26/5))+ylim(c(-26/5,26/5))
-# dev.off()
+# +geom_point(aes(x=-8.89, y=-6.05), colour="blue", fill = "blue",shape=24, size=4)+
+# geom_point(aes(x=-0.16, y=-0.404), colour="blue", fill = "blue",shape=24, size=4)
+
+
+
+
+
 # ####################################################
 # #### STAP-MODEL
 # ####################################################
@@ -1436,20 +1230,6 @@ p
 
 
 
-# + labs(color="Behavior")+scale_color_manual(values=cbPalette[c(1,2)])+guides(shape = guide_legend(override.aes = list(size = 5)))
-
-# p = ggplot(DataTR,aes(x=thetaseq, y =Theta,group = Gruppo , linetype=Gruppo  ))+
-# geom_line(aes(color=Gruppo),size=1.5)+ scale_fill_discrete(name="Bahavior")+theme(
-#   axis.text.y = element_text(face="bold",size=25),
-#   axis.text.x = element_text(face="bold",size=25),
-#   axis.title.x = element_text(face="bold",size=25),
-#   axis.title.y = element_text(face="bold",size=25),
-#   legend.text = element_text(face="bold",size=25),
-#   legend.title = element_text(face="bold",size=25)
-# ) +ylim(0,0.300)+xlab("Turning-Angle")+ylab("Density")
-#
-#
-#  + labs(color="Behavior")+scale_color_manual(values=cbPalette[c(1,2)])+guides(shape = guide_legend(override.aes = list(size = 5)))
 
 
 pdf(paste(PLOT_DIRPLOT ,"Turn1.pdf",sep=""))
@@ -1472,430 +1252,7 @@ pdf(paste(PLOT_DIRPLOT ,"Step1.pdf",sep=""))
 print(p)
 dev.off()
 
-#### #### #### #### #### #### #### ####
-#### Prediction
-#### #### #### #### #### #### #### ####
 
-
-mu0List = list()
-muCList = list()
-psiList = list()
-rhoList = list()
-sigmaList = list()
-piList = list()
-kk = 1
-# for(k in WM)
-# {
-#     mu0List[[kk]] = matrix(colMeans(ModelOUT$mu0[,1:2,k]),ncol=1)
-#     muCList[[kk]] = matrix(colMeans(ModelOUT$muC[,1:2,k]),ncol=1)
-#     psiList[[kk]] = matrix(mean(ModelOUT$psi[,1,k]),ncol=1)
-#     rhoList[[kk]] = matrix(mean(ModelOUT$rho[,1,k]),ncol=1)
-#     sigmaList[[kk]] = matrix(colMeans(ModelOUT$sigma[,1:4,k]),nrow=2)
-#     piList[[kk]] = matrix(colMeans(ModelOUT$pi[,1:length(WM),k]),ncol=length(WM))
-#     kk = kk+1
-#
-# }
-#
-#
-# DataZ = data.frame(Longitude = DataCoords[-nrow(DataCoords),1], Latitude = DataCoords[-nrow(DataCoords),2],Cluster = as.factor(Z_MAP2_gen) )
-#
-# kk = 4
-# for(kk in 1:length(WM))
-# {
-#
-#
-#
-#
-#     Mu = mu0List[[kk]]
-#     Nu = muCList[[kk]]
-#     tau = psiList[[kk]]
-#
-#
-#     rho = rhoList[[kk]]
-#     Sigma = sigmaList[[kk]]
-#
-#     xseq = yseq = seq(-4,4,length.out=4)
-#     xseq = yseq = seq(-4,4, length.out=4)
-#     nnnn = length(xseq)
-#     angle = rev(rep(seq(0,-pi,by=-pi/(nnnn-1)), each=nnnn))
-#
-#     Grid = expand.grid(xseq, yseq)
-#     colnames(Grid) = c("Longitude", "Latitude")
-#
-#
-#     P =qplot(c(-10),0,geom="line", xlab="",ylab="")+theme(axis.text.x = element_text(face="bold",size=25),
-#             axis.text.y = element_text(face="bold",size=25),
-#             axis.title.x = element_text(face="bold",size=25),
-#             axis.title.y = element_text(face="bold",size=25),)+ coord_fixed(ratio=1)
-#
-#
-#
-#     meanPlot = Grid[,]
-#     meanPlot[,1] = Grid[,1]+tau*(Mu[1,1]-Grid[,1])
-#     meanPlot[,2] = Grid[,2]+tau*(Mu[2,1]-Grid[,2])
-#
-#     P1 = P+geom_point( aes(Grid$Longitude, Grid$Latitude))+geom_point()
-#     #geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = meanPlot[,1], yend = meanPlot[,2]),
-#                      # arrow = arrow(length = unit(0.2, "cm")),color=cbPalette[1])
-#
-#     j=1
-#     i = 1
-#     arr = Grid
-#     ang = angle[i]
-#     R = matrix(c(cos(rho*ang), sin(rho*ang), -sin(rho*ang), cos(rho*ang)), ncol=2)
-#     R2 = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-#     muPlot =  (1-rho[j])*tau*(Mu-Grid[i,])+ rho[j]*R2%*%Nu
-#     arr[i,] = arr[i,]+muPlot
-#     SigmaPlot = R%*%Sigma%*%t(R)
-#     app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-#     app[,1] = app[,1]+Grid[i,1]+muPlot[1,1]
-#     app[,2] = app[,2]+Grid[i,2]+muPlot[1,2]
-#     ell = app
-#     for(i in 2:nrow(Grid))
-#     {
-#         ang = angle[i]
-#         R = matrix(c(cos(rho*ang), sin(rho*ang), -sin(rho*ang), cos(rho*ang)), ncol=2)
-#         R2 = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-#         muPlot =  (1-rho[j])*tau*(Mu-Grid[i,])+ rho[j]*R2%*%Nu
-#         SigmaPlot = R%*%Sigma%*%t(R)
-#         arr[i,] = arr[i,]+muPlot
-#         app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-#         app[,1] = app[,1]+Grid[i,1]+muPlot[1,1]
-#         app[,2] = app[,2]+Grid[i,2]+muPlot[1,2]
-#         ell = rbind(ell,NA, app)
-#
-#     }
-#     ell_2 = ell
-#     arr_2 = arr
-#     muPlot_2 = arr
-#
-#
-#     # col_ell_1 = rep(cbPalette[1], nrow(ell_2))
-#     # col_ell_2 = rep(cbPalette[3], nrow(ell))
-#     # ell = rbind(ell,NA, ell_2)
-#
-#     P4 = P1
-#
-#
-#     i = 1
-#     ang = angle[i]
-#     R = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-#     arr2 = Grid
-#     muPlot = Grid[i,]+(R)%*%matrix(c(-5/5,0), ncol=1)
-#     arr2[i,] = muPlot
-#     for(i in 2:nrow(Grid))
-#     {
-#         ang = angle[i]
-#         R = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-#         muPlot = Grid[i,]+(R)%*%matrix(c(-5/5,0), ncol=1)
-#         arr2[i,] = muPlot
-#     }
-#     #P6 = P4 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = arr[,1], yend = arr[,2], color="2"),
-#                       #arrow = arrow(length = unit(0.2, "cm")))
-#     #P7 = P6 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = muPlot_2[,1], yend = muPlot_2[,2], color="1"),
-#                     #arrow = arrow(length = unit(0.2, "cm")))
-#
-#
-#     P5 = P4+geom_segment(aes(x = arr2[,1], y = arr2[,2], xend = Grid[,1], yend = Grid[,2]),arrow = arrow(length = unit(0.3, "cm"), type = "closed"), size = 1.2, linetype=6, color= "brown")
-#     P7 = P5 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = muPlot_2[,1], yend = muPlot_2[,2]), color=cbPalette[c(kk)],
-#                     arrow = arrow(length = unit(0.3, "cm")), size = 1.2)
-#
-#     PTOT =P7+
-#     #scale_color_manual(values = c(cbPalette[c(kk)],"black",cbPalette[c(kk)]),name="", labels=c("Behavior","Prev. Dir"))+
-#      theme(
-#          axis.text.y = element_text(face="bold",size=25),
-#     axis.text.x = element_text(face="bold",size=25),
-#     axis.title.x = element_text(face="bold",size=25),
-#     axis.title.y = element_text(face="bold",size=25),
-#     legend.text = element_text(face="bold",size=25),
-#     legend.title = element_text(face="bold",size=25) )+ geom_path(aes(x=ell_2[,1],y=ell_2[,2]),  size = 2,color=cbPalette[c(kk)], linetype=1)+ylab("Latitude")+xlab("Longitude")+theme(legend.position="bottom")
-#
-#     PP = PTOT+xlim(c(-5,5))+ylim(c(-5,5))+geom_point(aes(DataZ$Longitude[as.numeric(DataZ$Cluster)==kk],DataZ$Latitude[as.numeric(DataZ$Cluster)==kk]),size=0.99)
-#
-# PP
-#
-# 	PP2 = PP
-#
-# 	# if((kk==4) | (kk==5))
-# 	# {
-# 	#   Xp = mean(ModelOUT$mu0[,1,WM[i]])
-# 	#   Yp = mean(ModelOUT$mu0[,2,WM[i]])
-# 	#   PP2 = PP2 +annotate("point", x = Xp, y = Yp, colour = "black", size=5)
-# 	#   #+
-# 	#   #annotate("text", x = Xp, y = Yp+0.4, label="Attractive-point", size=15)
-# 	# }
-# 	#PP2
-#
-#
-#     pdf(paste(PLOT_DIRPLOT,kk,"Mov.pdf",sep=""),width=7, height=7)
-#     print(PP2+xlim(c(-5,5))+ylim(c(-5,5)))
-#     dev.off()
-#
-# }
-#
-#
-#
-#
-#
-#
-# kk = 1
-# Mu = mu0List[[kk]]
-# Nu = muCList[[kk]]
-# tau = psiList[[kk]]
-#
-#
-# rho = rhoList[[kk]]
-# Sigma = sigmaList[[kk]]
-#
-# xseq = yseq = seq(-0.1,0.1 ,length.out=2)
-# xseq = yseq = seq(-0.1,0.1, length.out=2)
-# nnnn = length(xseq)
-# angle = rev(rep(seq(0,-pi,by=-pi/(3)), each=1))
-#
-# Grid = expand.grid(xseq, yseq)
-# colnames(Grid) = c("Longitude", "Latitude")
-#
-#
-# P =qplot(c(-10),0,geom="line", xlab="",ylab="")+theme(axis.text.x = element_text(face="bold",size=25),
-# 				axis.text.y = element_text(face="bold",size=25),
-# 				axis.title.x = element_text(face="bold",size=25),
-# 				axis.title.y = element_text(face="bold",size=25),)+ coord_fixed(ratio=1)
-#
-#
-#
-# meanPlot = Grid[,]
-# meanPlot[,1] = Grid[,1]+tau*(Mu[1,1]-Grid[,1])
-# meanPlot[,2] = Grid[,2]+tau*(Mu[2,1]-Grid[,2])
-#
-# P1 = P+geom_point( aes(Grid$Longitude, Grid$Latitude))+geom_point()
-# #geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = meanPlot[,1], yend = meanPlot[,2]),
-# 								 # arrow = arrow(length = unit(0.2, "cm")),color=cbPalette[1])
-#
-# j=1
-# i = 1
-# arr = Grid
-# ang = angle[i]
-# R = matrix(c(cos(rho*ang), sin(rho*ang), -sin(rho*ang), cos(rho*ang)), ncol=2)
-# R2 = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# muPlot =  (1-rho[j])*tau*(Mu-Grid[i,])+ rho[j]*R2%*%Nu
-# arr[i,] = arr[i,]+muPlot
-# SigmaPlot = R%*%Sigma%*%t(R)
-# app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-# app[,1] = app[,1]+Grid[i,1]+muPlot[1,1]
-# app[,2] = app[,2]+Grid[i,2]+muPlot[1,2]
-# ell = app
-# for(i in 2:nrow(Grid))
-# {
-# 		ang = angle[i]
-# 		R = matrix(c(cos(rho*ang), sin(rho*ang), -sin(rho*ang), cos(rho*ang)), ncol=2)
-# 		R2 = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# 		muPlot =  (1-rho[j])*tau*(Mu-Grid[i,])+ rho[j]*R2%*%Nu
-# 		SigmaPlot = R%*%Sigma%*%t(R)
-# 		arr[i,] = arr[i,]+muPlot
-# 		app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-# 		app[,1] = app[,1]+Grid[i,1]+muPlot[1,1]
-# 		app[,2] = app[,2]+Grid[i,2]+muPlot[1,2]
-# 		ell = rbind(ell,NA, app)
-#
-# }
-# ell_2 = ell
-# arr_2 = arr
-# muPlot_2 = arr
-#
-#
-# # col_ell_1 = rep(cbPalette[1], nrow(ell_2))
-# # col_ell_2 = rep(cbPalette[3], nrow(ell))
-# # ell = rbind(ell,NA, ell_2)
-#
-# P4 = P1
-#
-#
-# i = 1
-# ang = angle[i]
-# R = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# arr2 = Grid
-# muPlot = Grid[i,]+(R)%*%matrix(c(-0.25/5,0), ncol=1)
-# arr2[i,] = muPlot
-# for(i in 2:nrow(Grid))
-# {
-# 		ang = angle[i]
-# 		R = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# 		muPlot = Grid[i,]+(R)%*%matrix(c(-0.25/5,0), ncol=1)
-# 		arr2[i,] = muPlot
-# }
-# #P6 = P4 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = arr[,1], yend = arr[,2], color="2"),
-# 									#arrow = arrow(length = unit(0.2, "cm")))
-# #P7 = P6 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = muPlot_2[,1], yend = muPlot_2[,2], color="1"),
-# 								#arrow = arrow(length = unit(0.2, "cm")))
-#
-#
-# P5 = P4+geom_segment(aes(x = arr2[,1], y = arr2[,2], xend = Grid[,1], yend = Grid[,2]),arrow = arrow(length = unit(0.3, "cm"), type = "closed"), size = 1.2, linetype=6, color= "black")
-# P7 = P5 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = muPlot_2[,1], yend = muPlot_2[,2]), color=cbPalette[c(kk)],
-# 								arrow = arrow(length = unit(0.3, "cm")), size = 1.2)
-#
-# PTOT =P7+
-# #scale_color_manual(values = c(cbPalette[c(kk)],"black",cbPalette[c(kk)]),name="", labels=c("Behavior","Prev. Dir"))+
-#  theme(
-# 		 axis.text.y = element_text(face="bold",size=25),
-# axis.text.x = element_text(face="bold",size=25),
-# axis.title.x = element_text(face="bold",size=25),
-# axis.title.y = element_text(face="bold",size=25),
-# legend.text = element_text(face="bold",size=25),
-# legend.title = element_text(face="bold",size=25) )+ geom_path(aes(x=ell_2[,1],y=ell_2[,2]),  size = 2,color=cbPalette[c(kk)], linetype=1)+ylab("Latitude")+xlab("Longitude")+theme(legend.position="bottom")
-#
-# PP = PTOT+xlim(c(-0.2,0.2))+ylim(c(-0.2,0.2))
-# #+geom_point(aes(DataZ$Longitude[as.numeric(DataZ$Cluster)==kk],DataZ$Latitude[as.numeric(DataZ$Cluster)==kk]),size=0.99)
-#
-# PP
-#
-# PP2 = PP
-#
-# # if((kk==4) | (kk==5))
-# # {
-# #   Xp = mean(ModelOUT$mu0[,1,WM[i]])
-# #   Yp = mean(ModelOUT$mu0[,2,WM[i]])
-# #   PP2 = PP2 +annotate("point", x = Xp, y = Yp, colour = "black", size=5)
-# #   #+
-# #   #annotate("text", x = Xp, y = Yp+0.4, label="Attractive-point", size=15)
-# # }
-# #PP2
-#
-#
-# pdf(paste(PLOT_DIRPLOT,kk,"DetMov.pdf",sep=""),width=7, height=7)
-# print(PP2)
-# dev.off()
-#
-#
-#
-#
-# kk = 2
-# Mu = mu0List[[kk]]
-# Nu = muCList[[kk]]
-# tau = psiList[[kk]]
-#
-#
-# rho = rhoList[[kk]]
-# Sigma = sigmaList[[kk]]
-#
-# xseq = yseq = seq(-0.6,0.6 ,length.out=2)
-# xseq = yseq = seq(-0.6,0.6, length.out=2)
-# nnnn = length(xseq)
-# angle = rev(rep(seq(0,-pi,by=-pi/(3)), each=1))
-#
-# Grid = expand.grid(xseq, yseq)
-# colnames(Grid) = c("Longitude", "Latitude")
-#
-#
-# P =qplot(c(-10),0,geom="line", xlab="",ylab="")+theme(axis.text.x = element_text(face="bold",size=25),
-# 				axis.text.y = element_text(face="bold",size=25),
-# 				axis.title.x = element_text(face="bold",size=25),
-# 				axis.title.y = element_text(face="bold",size=25),)+ coord_fixed(ratio=1)
-#
-#
-#
-# meanPlot = Grid[,]
-# meanPlot[,1] = Grid[,1]+tau*(Mu[1,1]-Grid[,1])
-# meanPlot[,2] = Grid[,2]+tau*(Mu[2,1]-Grid[,2])
-#
-# P1 = P+geom_point( aes(Grid$Longitude, Grid$Latitude))+geom_point()
-# #geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = meanPlot[,1], yend = meanPlot[,2]),
-# 								 # arrow = arrow(length = unit(0.2, "cm")),color=cbPalette[1])
-#
-# j=1
-# i = 1
-# arr = Grid
-# ang = angle[i]
-# R = matrix(c(cos(rho*ang), sin(rho*ang), -sin(rho*ang), cos(rho*ang)), ncol=2)
-# R2 = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# muPlot =  (1-rho[j])*tau*(Mu-Grid[i,])+ rho[j]*R2%*%Nu
-# arr[i,] = arr[i,]+muPlot
-# SigmaPlot = R%*%Sigma%*%t(R)
-# app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-# app[,1] = app[,1]+Grid[i,1]+muPlot[1,1]
-# app[,2] = app[,2]+Grid[i,2]+muPlot[1,2]
-# ell = app
-# for(i in 2:nrow(Grid))
-# {
-# 		ang = angle[i]
-# 		R = matrix(c(cos(rho*ang), sin(rho*ang), -sin(rho*ang), cos(rho*ang)), ncol=2)
-# 		R2 = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# 		muPlot =  (1-rho[j])*tau*(Mu-Grid[i,])+ rho[j]*R2%*%Nu
-# 		SigmaPlot = R%*%Sigma%*%t(R)
-# 		arr[i,] = arr[i,]+muPlot
-# 		app = ellipse(c(0,0), SigmaPlot, col="red", radius=sqrt(2 * qf(.95, 2, 9999)), add=F, draw=F)
-# 		app[,1] = app[,1]+Grid[i,1]+muPlot[1,1]
-# 		app[,2] = app[,2]+Grid[i,2]+muPlot[1,2]
-# 		ell = rbind(ell,NA, app)
-#
-# }
-# ell_2 = ell
-# arr_2 = arr
-# muPlot_2 = arr
-#
-#
-# # col_ell_1 = rep(cbPalette[1], nrow(ell_2))
-# # col_ell_2 = rep(cbPalette[3], nrow(ell))
-# # ell = rbind(ell,NA, ell_2)
-#
-# P4 = P1
-#
-#
-# i = 1
-# ang = angle[i]
-# R = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# arr2 = Grid
-# muPlot = Grid[i,]+(R)%*%matrix(c(-1/5,0), ncol=1)
-# arr2[i,] = muPlot
-# for(i in 2:nrow(Grid))
-# {
-# 		ang = angle[i]
-# 		R = matrix(c(cos(ang), sin(ang), -sin(ang), cos(ang)), ncol=2)
-# 		muPlot = Grid[i,]+(R)%*%matrix(c(-1/5,0), ncol=1)
-# 		arr2[i,] = muPlot
-# }
-# #P6 = P4 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = arr[,1], yend = arr[,2], color="2"),
-# 									#arrow = arrow(length = unit(0.2, "cm")))
-# #P7 = P6 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = muPlot_2[,1], yend = muPlot_2[,2], color="1"),
-# 								#arrow = arrow(length = unit(0.2, "cm")))
-#
-#
-# P5 = P4+geom_segment(aes(x = arr2[,1], y = arr2[,2], xend = Grid[,1], yend = Grid[,2]),arrow = arrow(length = unit(0.3, "cm"), type = "closed"), size = 1.2, linetype=6, color= "black")
-# P7 = P5 + geom_segment(aes(x = Grid[,1], y = Grid[,2], xend = muPlot_2[,1], yend = muPlot_2[,2]), color=cbPalette[c(kk)],
-# 								arrow = arrow(length = unit(0.3, "cm")), size = 1.2)
-#
-# PTOT =P7+
-# #scale_color_manual(values = c(cbPalette[c(kk)],"black",cbPalette[c(kk)]),name="", labels=c("Behavior","Prev. Dir"))+
-#  theme(
-# 		 axis.text.y = element_text(face="bold",size=25),
-# axis.text.x = element_text(face="bold",size=25),
-# axis.title.x = element_text(face="bold",size=25),
-# axis.title.y = element_text(face="bold",size=25),
-# legend.text = element_text(face="bold",size=25),
-# legend.title = element_text(face="bold",size=25) )+ geom_path(aes(x=ell_2[,1],y=ell_2[,2]),  size = 2,color=cbPalette[c(kk)], linetype=1)+ylab("Latitude")+xlab("Longitude")+theme(legend.position="bottom")
-#
-# PP = PTOT+xlim(c(-1.1,1.1))+ylim(c(-1.1,1.1))
-# #+geom_point(aes(DataZ$Longitude[as.numeric(DataZ$Cluster)==kk],DataZ$Latitude[as.numeric(DataZ$Cluster)==kk]),size=0.99)
-#
-# PP
-#
-# PP2 = PP
-#
-# # if((kk==4) | (kk==5))
-# # {
-# #   Xp = mean(ModelOUT$mu0[,1,WM[i]])
-# #   Yp = mean(ModelOUT$mu0[,2,WM[i]])
-# #   PP2 = PP2 +annotate("point", x = Xp, y = Yp, colour = "black", size=5)
-# #   #+
-# #   #annotate("text", x = Xp, y = Yp+0.4, label="Attractive-point", size=15)
-# # }
-# #PP2
-#
-#
-# pdf(paste(PLOT_DIRPLOT,kk,"DetMov.pdf",sep=""),width=7, height=7)
-# print(PP2)
-# dev.off()
-#
-#
 
 
 #### #### #### #### #### ####
@@ -2910,21 +2267,6 @@ for(imcmc in 1:nmcmc)
 
 
 
-
-# DataTR = data.frame(Theta = c(rowSums(Densmat[[1]]*diff2),rowSums(Densmat[[2]]*diff2)),R = c(colSums(Densmat[[1]]*diff1),colSums(Densmat[[2]]*diff1)) , Behavior = as.factor(rep(c(1,2),each =nseq )),thetaseq = rep(thetaseq, times=2),rseq = rep(rseq, times=2))
-#
-# #group.colors <- c("1" = cbPalette[1], "2" = cbPalette[2], "3" =cbPalette[3], "4" = "#E2FF33", "5" = "#E3DB71")
-# p = ggplot(DataTR,aes(x=thetaseq, y =Theta,group = Behavior , linetype=Behavior ))+
-# geom_line(aes(color=Behavior),size=2)+theme(
-# 	axis.text.y = element_text(face="bold",size=25),
-# 	axis.text.x = element_text(face="bold",size=25),
-# 	axis.title.x = element_text(face="bold",size=25),
-# 	axis.title.y = element_text(face="bold",size=25),
-# 	legend.text = element_text(face="bold",size=25),
-# 	legend.title = element_text(face="bold",size=25)
-# ) +ylim(0,0.300)+xlab("Turning-Angle")+ylab("Density")+scale_color_manual(values=cbPalette )+theme(legend.position="bottom",legend.key.width = unit(2, 'cm'))
-# p
-
 DataTR = data.frame(Theta = c(rowSums(Densmat_2[[1]]*diff2),rowSums(Densmat_2[[2]]*diff2),rowSums(Densmat_2[[3]]*diff2)),R = c(colSums(Densmat_2[[1]]*diff1),colSums(Densmat_2[[2]]*diff1),colSums(Densmat_2[[3]]*diff1)) , Behavior = as.factor(rep(c(1,2,3),each =nseq )),thetaseq = rep(thetaseq, times=3),rseq = rep(rseq, times=3))
 
 
@@ -3061,30 +2403,6 @@ for(i in 1:5)
 	dev.off()
 }
 
-
-
-
-# DataT = as.data.frame(TT2)
-# p = ggplot(DataT, aes(x=Var2,y = Freq, group=Var1))+
-# geom_line(aes(color=Var1),size=1.5)+
-# theme(aspect.ratio = 1/2,
-#   axis.text.y = element_text(face="bold",size=10),
-#   axis.text.x = element_text(face="bold",size=10),
-#   axis.title.x = element_text(face="bold",size=10),
-#   axis.title.y = element_text(face="bold",size=10),
-#   legend.text = element_text(face="bold",size=10),
-#   legend.title = element_text(face="bold",size=10)
-# )+xlab("Time")+ylab("")+ scale_x_discrete(breaks=(0:4)*12, labels=c(
-#  "00:00",
-#  "06:00",
-#  "12:00",
-#  "18:00",
-#  "24:00"
-# ))+ labs(color='Behavior')+scale_color_manual(values=cbPalette)+guides(shape = guide_legend(override.aes = list(size = 5)))
-# p
-# pdf(paste(PLOT_DIRPLOT ,"TimeBehav_0.pdf",sep=""))
-# print(p)
-# dev.off()
 
 
 
@@ -3283,687 +2601,239 @@ for(iisim in 1:10)
 }
 
 
-#
-# #### #### #### #### #### #### #### #### ####
-# #### Observed turning-angle for the first two
-# #### OU-HMM behaviors
-# #### #### #### #### #### #### #### #### ####
-#
-# load(paste(PLOT_DIRDATA , MOD_STAP_NAME,sep=""))
-# WM = c(14,164,71,23,26)
-# WMgen = WM
-#
-# MAP = apply(ModelOUT$zeta,2,findmode)
-# INDEX_FIRST = which(MAP==14)
-# INDEX_SECOND = which(MAP==164)
-# length(INDEX_FIRST)
-#
-#
-#
-# DataCoords_2 = as.data.frame(DataCoords)
-# colnames(DataCoords_2) = c("x","y")
-# dataDog  <- prepData(DataCoords_2,type="UTM")
-#
-# ###  usare l$y*3 anche nelle figure dei dati osservati
-# dataDog2 = rbind(dataDog[INDEX_FIRST,-1] -2*pi,dataDog[INDEX_FIRST,-1],dataDog[INDEX_FIRST,-1]+2*pi)
-# l <- density(dataDog2$angle,na.rm=T, bw=0.3)
-# ld =data.frame(x=l$x,y=l$y*3)
-# P = ggplot(ld, aes(x=x,y=y))+geom_line()+theme(
-#   axis.text.x = element_text(face="bold",size=25),
-#   axis.text.y = element_text(face="bold",size=25),
-#   axis.title.x = element_text(face="bold",size=25),
-#   axis.title.y = element_text(face="bold",size=25)
-# )+ylab("Density")+xlab("Turning-angle")+xlim(c(-pi,pi))+ylim(c(0,0.32))
-# P
-# pdf(paste(PLOT_DIRPLOT ,"ObsTurning_k1.pdf",sep=""))
-# print(P)
-# dev.off()
-#
-#
-# dataDog2 = rbind(dataDog[INDEX_SECOND,-1] -2*pi,dataDog[INDEX_SECOND,-1],dataDog[INDEX_SECOND,-1]+2*pi)
-# l <- density(dataDog2$angle,na.rm=T, bw=0.3)
-# ld =data.frame(x=l$x,y=l$y*3)
-# P = ggplot(ld, aes(x=x,y=y))+geom_line()+theme(
-#   axis.text.x = element_text(face="bold",size=25),
-#   axis.text.y = element_text(face="bold",size=25),
-#   axis.title.x = element_text(face="bold",size=25),
-#   axis.title.y = element_text(face="bold",size=25)
-# )+ylab("Density")+xlab("Turning-angle")+xlim(c(-pi,pi))+ylim(c(0,0.32))
-# P
-# pdf(paste(PLOT_DIRPLOT ,"ObsTurning_k2.pdf",sep=""))
-# print(P)
-# dev.off()
-#
-#
-#
-# load(paste(PLOT_DIRDATA , MOD_BRW_NAME,sep=""))
-# WM = c(39,136,14,127,23)
-#
-# s1    = mean(ModelOUT$sigma[,1,WM[1]])
-# s12   = mean(ModelOUT$sigma[,2,WM[1]])
-# s2    = mean(ModelOUT$sigma[,4,WM[1]])
-#
-# X = rmnorm(50000, c(0,0), matrix(c(s1,s12,s12,s2), ncol=2))
-# X = apply(X,2,cumsum)
-# colnames(X) = c("x","y")
-# X = data.frame(X)
-# dataDog  = prepData(X,type="UTM", LLangle=F)
-#
-#
-# # DataCoords_2 = as.data.frame(DataCoords)
-# # colnames(DataCoords_2) = c("x","y")
-# # dataDog  <- prepData(DataCoords_2,type="UTM",LLangle=F)
-#
-# ###  usare l$y*3 anche nelle figure dei dati osservati
-# dataDog2 = rbind(dataDog[,-1] -2*pi,dataDog[,-1],dataDog[,-1]+2*pi)
-# l <- density(dataDog2$angle,na.rm=T, bw=0.3)
-# ld =data.frame(x=l$x,y=l$y*3)
-# P = ggplot(ld, aes(x=x,y=y))+geom_line()+theme(
-#   axis.text.x = element_text(face="bold",size=25),
-#   axis.text.y = element_text(face="bold",size=25),
-#   axis.title.x = element_text(face="bold",size=25),
-#   axis.title.y = element_text(face="bold",size=25)
-# )+ylab("Density")+xlab("Turning-angle")+xlim(c(-pi,pi))+ylim(c(0,0.32))
-# P
-# pdf(paste(PLOT_DIRPLOT ,"ObsTurning_k1_OU.pdf",sep=""))
-# print(P)
-# dev.off()
-#
-#
-#
-#
-# s1    = mean(ModelOUT$sigma[,1,WM[2]])
-# s12   = mean(ModelOUT$sigma[,2,WM[2]])
-# s2    = mean(ModelOUT$sigma[,4,WM[2]])
-#
-# X = rmnorm(50000, c(0,0), matrix(c(s1,s12,s12,s2), ncol=2))
-# X = apply(X,2,cumsum)
-# colnames(X) = c("x","y")
-# X = data.frame(X)
-# dataDog  = prepData(X,type="UTM", LLangle=F)
-#
-#
-# # DataCoords_2 = as.data.frame(DataCoords)
-# # colnames(DataCoords_2) = c("x","y")
-# # dataDog  <- prepData(DataCoords_2,type="UTM",LLangle=F)
-#
-# ###  usare l$y*3 anche nelle figure dei dati osservati
-# dataDog2 = rbind(dataDog[,-1] -2*pi,dataDog[,-1],dataDog[,-1]+2*pi)
-# l <- density(dataDog2$angle,na.rm=T, bw=0.3)
-# ld =data.frame(x=l$x,y=l$y*3)
-# P = ggplot(ld, aes(x=x,y=y))+geom_line()+theme(
-#   axis.text.x = element_text(face="bold",size=25),
-#   axis.text.y = element_text(face="bold",size=25),
-#   axis.title.x = element_text(face="bold",size=25),
-#   axis.title.y = element_text(face="bold",size=25)
-# )+ylab("Density")+xlab("Turning-angle")+xlim(c(-pi,pi))+ylim(c(0,0.32))
-# P
-# pdf(paste(PLOT_DIRPLOT ,"ObsTurning_k2_OU.pdf",sep=""))
-# print(P)
-# dev.off()
 
 
 
-# #### #### #### #### #### #### #### #### ####
-# #### SIMULATIONS
-# #### #### #### #### #### #### #### #### ####
-#
-# cbPalette <- c(
-# "#e41a1c",
-# "#377eb8",
-# "#4daf4a",
-# "#984ea3",
-# "#ff7f00"
-# )
-#
-#
-# isim = 1
-# load(paste(PLOT_DIRDATA ,MOD_SIM_NAME ,isim,"ModelOUT.Rdata",sep=""))
-#
-#
-# DataZ = data.frame(Longitude = DataCoords[,1], Latitude = DataCoords[,2] , Behavior = as.factor(LatentClassification))
-#
-# p = ggplot(DataZ, aes(x=Longitude, y=Latitude,group=Behavior))
-# p = p+    geom_point(aes(shape=Behavior, color=Behavior),size = 1.5)
-#
-# p = p+theme(
-#   axis.text.y = element_text(face="bold",size=25),
-#   axis.text.x = element_text(face="bold",size=25),
-#   axis.title.x = element_text(face="bold",size=25),
-#   axis.title.y = element_text(face="bold",size=25),
-#   legend.text = element_text(face="bold",size=25),
-#   legend.title = element_text(face="bold",size=25)
-# )+scale_color_manual(values=cbPalette[c(1,2,3)])  +guides(shape = guide_legend(override.aes = list(size = 15)), colour = guide_legend(override.aes = list(size=5)))
-# p
-#
-# pdf(paste(PLOT_DIRPLOT ,"Sim",isim,".pdf",sep=""))
-# print(p)
-# dev.off()
-#
-# WM = c(76,186,121)
-# WMgen = WM
-#
-# Z_MAP = apply(ModelOUT$zeta,2,findmode)
-#
-# ### Posterior estimates
-# print("")
-# print("")
-# print("")
-# print("Posterior Estimates - SIM1")
-# print("")
-# for(i in 1:2)
-# {
-#   dd = paste("$backslash mu_{j,",i,"}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$mu0[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$mu0[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$mu0[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-# for(i in 1:2)
-# {
-#   dd = paste("$backslash eta_{j,",i,"}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$muC[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$muC[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$muC[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-# for(i in 1:1)
-# {
-#   dd = paste("$backslash tau_{j}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$psi[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$psi[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$psi[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-#
-# for(i in 1:1)
-# {
-#   dd = paste("$backslash rho_{j}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$rho[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$rho[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$rho[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-#
-#
-# for(i in 1:2)
-# {
-#   for(j in i:2)
-#   {
-#     dd = paste("$backslash boldsymbol{backslash Sigma}_{", i,",",j, "}$ ",sep="")
-#     ff = "(CI) "
-#     for(k in WM)
-#     {
-#       dd = paste(dd, " & ", round(mean(ModelOUT$sigma[,(i-1)*2+j,k]),3),sep = )
-#       ff = paste(ff, " & ","(",round(quantile(ModelOUT$sigma[,(i-1)*2+j,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$sigma[,(i-1)*2+j,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#     }
-#     dd = paste(dd, " \\")
-#     ff = paste(ff, " \\")
-#     print(dd)
-#     print(ff)
-#   }
-#
-#
-# }
-#
-# ik=1
-# for(k in WM)
-# {
-#   dd = paste("$backslash boldsymbol{backslash pi}_{", ik, "}$ ",sep="")
-#   ff = "(CI) "
-#   ii = 1
-#   for(i in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$pi[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$pi[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$pi[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#     ii = ii+1
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-#   ik = ik+1
-# }
-# ik = 1
-# for(i in 1:1)
-# {
-#   dd = paste("$backslash beta_{j}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$betaDP[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$betaDP[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$betaDP[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-# gammaC = ModelOUT$gammaDP
-# kappaC = ModelOUT$rhoDP*ModelOUT$akDP
-# alphaC = ModelOUT$akDP-kappaC
-# print("backslash hline backslash hline ")
-# dd1 = paste("& $backslash alpha$ & $backslash kappa$  & $backslash gamma$ ",sep="")
-# dd = paste("$backslash hat{}$ ",sep="")
-# ff = "(CI) "
-#
-# dd = paste(dd, " & ", round(mean(alphaC[,1]),3),sep = )
-# ff = paste(ff, " & ","(",round(quantile(alphaC[,1], probs=c(0.025)),3), " ",round(quantile(alphaC[,1], probs=c(1-0.025)),3)  ,   ")",sep="")
-# dd = paste(dd, " & ", round(mean(kappaC[,1]),3),sep = )
-# ff = paste(ff, " & ","(",round(quantile(kappaC[,1], probs=c(0.025)),3), " ",round(quantile(kappaC[,1], probs=c(1-0.025)),3)  ,   ")",sep="")
-# dd = paste(dd, " & ", round(mean(gammaC[,1]),3),sep = )
-# ff = paste(ff, " & ","(",round(quantile(gammaC[,1], probs=c(0.025)),3), " ",round(quantile(gammaC[,1], probs=c(1-0.025)),3)  ,   ")",sep="")
-# dd1 = paste(dd1, " \\")
-# dd = paste(dd, " \\")
-# ff = paste(ff, " \\")
-# print(dd1)
-# print("backslash hline  ")
-# print(dd)
-# print(ff)
-#
-#
-#
-#
-# print("Distribution of K")
-# table(apply(ModelOUT$zeta,1,function(x) length(unique(x))))/nrow(ModelOUT$zeta)
-#
-# print("Confusion Matrix")
-# sum(diag(table(LatentClassification[-length(LatentClassification)],Z_MAP)[order(WM),])/length(Z_MAP))
-#
-#
-#
-# isim = 2
-# load(paste(PLOT_DIRDATA ,MOD_SIM_NAME ,isim,"ModelOUT.Rdata",sep=""))
-#
-#
-# DataZ = data.frame(Longitude = DataCoords[,1], Latitude = DataCoords[,2] , Behavior = as.factor(LatentClassification))
-#
-# p = ggplot(DataZ, aes(x=Longitude, y=Latitude,group=Behavior))
-# p = p+    geom_point(aes(shape=Behavior, color=Behavior),size = 1.5)
-#
-# p = p+theme(
-#   axis.text.y = element_text(face="bold",size=25),
-#   axis.text.x = element_text(face="bold",size=25),
-#   axis.title.x = element_text(face="bold",size=25),
-#   axis.title.y = element_text(face="bold",size=25),
-#   legend.text = element_text(face="bold",size=25),
-#   legend.title = element_text(face="bold",size=25)
-# )+scale_color_manual(values=cbPalette[c(1,2,3)])  +guides(shape = guide_legend(override.aes = list(size = 15)), colour = guide_legend(override.aes = list(size=5)))
-# p
-#
-# pdf(paste(PLOT_DIRPLOT ,"Sim",isim,".pdf",sep=""))
-# print(p)
-# dev.off()
-#
-# WM = c(27,173,190)
-# WMgen = WM
-#
-# Z_MAP = apply(ModelOUT$zeta,2,findmode)
-#
-#
-# ### Posterior estimates
-# print("")
-# print("")
-# print("")
-# print("Posterior Estimates - SIM2")
-# print("")
-# for(i in 1:2)
-# {
-#   dd = paste("$backslash mu_{j,",i,"}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$mu0[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$mu0[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$mu0[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-# for(i in 1:2)
-# {
-#   dd = paste("$backslash eta_{j,",i,"}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$muC[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$muC[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$muC[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-# for(i in 1:1)
-# {
-#   dd = paste("$backslash tau_{j}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$psi[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$psi[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$psi[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-#
-# for(i in 1:1)
-# {
-#   dd = paste("$backslash rho_{j}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$rho[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$rho[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$rho[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-#
-#
-# for(i in 1:2)
-# {
-#   for(j in i:2)
-#   {
-#     dd = paste("$backslash boldsymbol{backslash Sigma}_{", i,",",j, "}$ ",sep="")
-#     ff = "(CI) "
-#     for(k in WM)
-#     {
-#       dd = paste(dd, " & ", round(mean(ModelOUT$sigma[,(i-1)*2+j,k]),3),sep = )
-#       ff = paste(ff, " & ","(",round(quantile(ModelOUT$sigma[,(i-1)*2+j,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$sigma[,(i-1)*2+j,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#     }
-#     dd = paste(dd, " \\")
-#     ff = paste(ff, " \\")
-#     print(dd)
-#     print(ff)
-#   }
-#
-#
-# }
-#
-# ik=1
-# for(k in WM)
-# {
-#   dd = paste("$backslash boldsymbol{backslash pi}_{", ik, "}$ ",sep="")
-#   ff = "(CI) "
-#   ii = 1
-#   for(i in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$pi[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$pi[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$pi[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#     ii = ii+1
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-#   ik = ik+1
-# }
-# ik = 1
-# for(i in 1:1)
-# {
-#   dd = paste("$backslash beta_{j}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$betaDP[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$betaDP[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$betaDP[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-# gammaC = ModelOUT$gammaDP
-# kappaC = ModelOUT$rhoDP*ModelOUT$akDP
-# alphaC = ModelOUT$akDP-kappaC
-# print("backslash hline backslash hline ")
-# dd1 = paste("& $backslash alpha$ & $backslash kappa$  & $backslash gamma$ ",sep="")
-# dd = paste("$backslash hat{}$ ",sep="")
-# ff = "(CI) "
-#
-# dd = paste(dd, " & ", round(mean(alphaC[,1]),3),sep = )
-# ff = paste(ff, " & ","(",round(quantile(alphaC[,1], probs=c(0.025)),3), " ",round(quantile(alphaC[,1], probs=c(1-0.025)),3)  ,   ")",sep="")
-# dd = paste(dd, " & ", round(mean(kappaC[,1]),3),sep = )
-# ff = paste(ff, " & ","(",round(quantile(kappaC[,1], probs=c(0.025)),3), " ",round(quantile(kappaC[,1], probs=c(1-0.025)),3)  ,   ")",sep="")
-# dd = paste(dd, " & ", round(mean(gammaC[,1]),3),sep = )
-# ff = paste(ff, " & ","(",round(quantile(gammaC[,1], probs=c(0.025)),3), " ",round(quantile(gammaC[,1], probs=c(1-0.025)),3)  ,   ")",sep="")
-# dd1 = paste(dd1, " \\")
-# dd = paste(dd, " \\")
-# ff = paste(ff, " \\")
-# print(dd1)
-# print("backslash hline  ")
-# print(dd)
-# print(ff)
-#
-#
-#
-# dd = paste("$backslash beta_{j}$ ",sep="")
-# ff = "(CI) "
-#
-#
-# print("Distribution of K")
-# table(apply(ModelOUT$zeta,1,function(x) length(unique(x))))/nrow(ModelOUT$zeta)
-#
-# print("Confusion Matrix")
-# sum(diag(table(LatentClassification[-length(LatentClassification)],Z_MAP)[order(WM),])/length(Z_MAP))
-#
-#
-#
-# str(ModelOUT)
-#
-#
-#
-# isim = 3
-# load(paste(PLOT_DIRDATA ,MOD_SIM_NAME ,isim,"ModelOUT.Rdata",sep=""))
-#
-#
-# DataZ = data.frame(Longitude = DataCoords[,1], Latitude = DataCoords[,2] , Behavior = as.factor(LatentClassification))
-#
-# p = ggplot(DataZ, aes(x=Longitude, y=Latitude,group=Behavior))
-# p = p+    geom_point(aes(shape=Behavior, color=Behavior),size = 1.5)
-#
-# p = p+theme(
-#   axis.text.y = element_text(face="bold",size=25),
-#   axis.text.x = element_text(face="bold",size=25),
-#   axis.title.x = element_text(face="bold",size=25),
-#   axis.title.y = element_text(face="bold",size=25),
-#   legend.text = element_text(face="bold",size=25),
-#   legend.title = element_text(face="bold",size=25)
-# )+scale_color_manual(values=cbPalette[c(1,2,3)])  +guides(shape = guide_legend(override.aes = list(size = 15)), colour = guide_legend(override.aes = list(size=5)))
-# p
-#
-# pdf(paste(PLOT_DIRPLOT ,"Sim",isim,".pdf",sep=""))
-# print(p)
-# dev.off()
-#
-# WM = c(65,192,150)
-# WMgen = WM
-#
-# Z_MAP = apply(ModelOUT$zeta,2,findmode)
-#
-#
-# ### Posterior estimates
-# print("")
-# print("")
-# print("")
-# print("Posterior Estimates - SIM3")
-# print("")
-# for(i in 1:2)
-# {
-#   dd = paste("$backslash mu_{j,",i,"}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$mu0[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$mu0[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$mu0[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-# for(i in 1:2)
-# {
-#   dd = paste("$backslash eta_{j,",i,"}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$muC[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$muC[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$muC[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-# for(i in 1:1)
-# {
-#   dd = paste("$backslash tau_{j}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$psi[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$psi[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$psi[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-#
-# for(i in 1:1)
-# {
-#   dd = paste("$backslash rho_{j}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$rho[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$rho[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$rho[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-#
-#
-# for(i in 1:2)
-# {
-#   for(j in i:2)
-#   {
-#     dd = paste("$backslash boldsymbol{backslash Sigma}_{", i,",",j, "}$ ",sep="")
-#     ff = "(CI) "
-#     for(k in WM)
-#     {
-#       dd = paste(dd, " & ", round(mean(ModelOUT$sigma[,(i-1)*2+j,k]),3),sep = )
-#       ff = paste(ff, " & ","(",round(quantile(ModelOUT$sigma[,(i-1)*2+j,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$sigma[,(i-1)*2+j,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#     }
-#     dd = paste(dd, " \\")
-#     ff = paste(ff, " \\")
-#     print(dd)
-#     print(ff)
-#   }
-#
-#
-# }
-#
-# ik=1
-# for(k in WM)
-# {
-#   dd = paste("$backslash boldsymbol{backslash pi}_{", ik, "}$ ",sep="")
-#   ff = "(CI) "
-#   ii = 1
-#   for(i in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$pi[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$pi[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$pi[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#     ii = ii+1
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-#   ik = ik+1
-# }
-# ik = 1
-# for(i in 1:1)
-# {
-#   dd = paste("$backslash beta_{j}$ ",sep="")
-#   ff = "(CI) "
-#   for(k in WM)
-#   {
-#     dd = paste(dd, " & ", round(mean(ModelOUT$betaDP[,i,k]),3),sep = )
-#     ff = paste(ff, " & ","(",round(quantile(ModelOUT$betaDP[,i,k], probs=c(0.025)),3), " ",round(quantile(ModelOUT$betaDP[,i,k], probs=c(1-0.025)),3)  ,   ")",sep="")
-#   }
-#   dd = paste(dd, " \\")
-#   ff = paste(ff, " \\")
-#   print(dd)
-#   print(ff)
-# }
-# gammaC = ModelOUT$gammaDP
-# kappaC = ModelOUT$rhoDP*ModelOUT$akDP
-# alphaC = ModelOUT$akDP-kappaC
-# print("backslash hline backslash hline ")
-# dd1 = paste("& $backslash alpha$ & $backslash kappa$  & $backslash gamma$ ",sep="")
-# dd = paste("$backslash hat{}$ ",sep="")
-# ff = "(CI) "
-#
-# dd = paste(dd, " & ", round(mean(alphaC[,1]),3),sep = )
-# ff = paste(ff, " & ","(",round(quantile(alphaC[,1], probs=c(0.025)),3), " ",round(quantile(alphaC[,1], probs=c(1-0.025)),3)  ,   ")",sep="")
-# dd = paste(dd, " & ", round(mean(kappaC[,1]),3),sep = )
-# ff = paste(ff, " & ","(",round(quantile(kappaC[,1], probs=c(0.025)),3), " ",round(quantile(kappaC[,1], probs=c(1-0.025)),3)  ,   ")",sep="")
-# dd = paste(dd, " & ", round(mean(gammaC[,1]),3),sep = )
-# ff = paste(ff, " & ","(",round(quantile(gammaC[,1], probs=c(0.025)),3), " ",round(quantile(gammaC[,1], probs=c(1-0.025)),3)  ,   ")",sep="")
-# dd1 = paste(dd1, " \\")
-# dd = paste(dd, " \\")
-# ff = paste(ff, " \\")
-# print(dd1)
-# print("backslash hline  ")
-# print(dd)
-# print(ff)
-#
-#
-# print("Distribution of K")
-# table(apply(ModelOUT$zeta,1,function(x) length(unique(x))))/nrow(ModelOUT$zeta)
-#
-# print("Confusion Matrix")
-# sum(diag(table(LatentClassification[-length(LatentClassification)],Z_MAP)[order(WM),])/length(Z_MAP))
-#
-#
-# ### beta
-#
-# str(mod)
-# #ret = function(mod = ModelOUT)
-# #{
-#     mod = ModelOUT
-# #}
+
+##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+##### ##### Bimodality and Asymmetri
+##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+library(ggplot2)
+par1 = c(pi-0.1, pi/12,pi/4-0.2, pi-0.35)
+par2 = c(0.1, 0.005,0.1, 0.1)
+par3 = c(1,0.3,5,1.7)
+par4 = c(1,1,10,15)
+
+# theta = rcauchy(n,pi/4-0.2,0.1)%%(2*pi)
+# r     = rweibull(n,5,10)
+iset = c(2,16,9,3)
+# theta = rcauchy(n,pi-0.35,0.1)%%(2*pi)
+# r     = rweibull(n,1.7,15)
+# theta = rcauchy(n,pi/3-0.5,0.1)%%(2*pi)
+# r     = rweibull(n,10,10)
+# theta = rcauchy(n,pi/4-0.015,0.01)%%(2*pi)
+# r     = rweibull(n,10,2.3)
+# theta = rcauchy(n,pi/12-0.01,0.01)%%(2*pi)
+# r     = rweibull(n,10,2.1)
+##### i = 1
+i = 1
+nn = 500
+dens_circ = matrix(NA, ncol=4, nrow= nn)
+dens_lin = matrix(NA, ncol=4, nrow= nn)
+theta_seq = seq(-pi, pi, length.out=nn)
+r_seq     = seq(0, 10, length.out=nn)
+
+dens_circ[,i] = dcauchy(theta_seq,par1[i],par2[i])+dcauchy(theta_seq+2*pi,par1[i],par2[i])+dcauchy(theta_seq-2*pi,par1[i],par2[i])
+dens_lin[,i]  = dweibull(r_seq,par3[i],par4[i])
+
+
+Data = data.frame("X" = theta_seq, "Y"=dens_circ[,i] )
+P1=ggplot(Data, aes(x=X, y=Y))+geom_line()+theme(
+  axis.text.x = element_text(face="bold",size=25),
+  axis.text.y = element_text(face="bold",size=25),
+  axis.title.x = element_text(face="bold",size=25),
+  axis.title.y = element_text(face="bold",size=25)
+)+ylab("Density")+xlab("Turning-angle")+xlim(c(-pi,pi))
+
+P1
+
+
+
+
+ Data = data.frame("X" = r_seq , "Y"=dens_lin[,i] )
+P2=ggplot(Data, aes(x=X, y=Y))+geom_line()+theme(
+  axis.text.x = element_text(face="bold",size=25),
+  axis.text.y = element_text(face="bold",size=25),
+  axis.title.x = element_text(face="bold",size=25),
+  axis.title.y = element_text(face="bold",size=25)
+)+ylab("Density")+xlab("Step-length")
+
+pdf(paste(PLOT_DIRPLOT ,"SimAng1.pdf",sep=""))
+print(P1)
+dev.off()
+
+pdf(paste(PLOT_DIRPLOT ,"SimLength1.pdf",sep=""))
+print(P2)
+dev.off()
+
+
+i = 2
+nn = 500
+theta_seq = seq(-pi, pi, length.out=nn)
+r_seq     = seq(0, 5, length.out=nn)
+
+dens_circ[,i] = dcauchy(theta_seq,par1[i],par2[i])+dcauchy(theta_seq+2*pi,par1[i],par2[i])+dcauchy(theta_seq-2*pi,par1[i],par2[i])
+dens_lin[,i]  = dweibull(r_seq,par3[i],par4[i])
+
+
+Data = data.frame("X" = theta_seq, "Y"=dens_circ[,i] )
+P1=ggplot(Data, aes(x=X, y=Y))+geom_line()+theme(
+  axis.text.x = element_text(face="bold",size=25),
+  axis.text.y = element_text(face="bold",size=25),
+  axis.title.x = element_text(face="bold",size=25),
+  axis.title.y = element_text(face="bold",size=25)
+)+ylab("Density")+xlab("Turning-Angle")
+
+
+
+Data = data.frame("X" = r_seq, "Y"=dens_lin[,i] )
+P2=ggplot(Data, aes(x=X, y=Y))+geom_line()+theme(
+ axis.text.x = element_text(face="bold",size=25),
+ axis.text.y = element_text(face="bold",size=25),
+ axis.title.x = element_text(face="bold",size=25),
+ axis.title.y = element_text(face="bold",size=25)
+)+ylab("Density")+xlab("Step-length")
+
+
+pdf(paste(PLOT_DIRPLOT ,"SimAng2.pdf",sep=""))
+print(P1)
+dev.off()
+
+pdf(paste(PLOT_DIRPLOT ,"SimLength2.pdf",sep=""))
+print(P2)
+dev.off()
+
+
+
+
+i = 3
+nn = 500
+theta_seq = seq(-pi, pi, length.out=nn)
+r_seq     = seq(0, 5, length.out=nn)
+
+dens_circ[,i] = dcauchy(theta_seq,par1[i],par2[i])+dcauchy(theta_seq+2*pi,par1[i],par2[i])+dcauchy(theta_seq-2*pi,par1[i],par2[i])
+dens_lin[,i]  = dweibull(r_seq,par3[i],par4[i])
+
+
+Data = data.frame("X" = theta_seq, "Y"=dens_circ[,i] )
+P1=ggplot(Data, aes(x=X, y=Y))+geom_line()+theme(
+  axis.text.x = element_text(face="bold",size=25),
+  axis.text.y = element_text(face="bold",size=25),
+  axis.title.x = element_text(face="bold",size=25),
+  axis.title.y = element_text(face="bold",size=25)
+)+ylab("Density")+xlab("Turning-Angle")
+P1
+
+
+Data = data.frame("X" = r_seq, "Y"=dens_lin[,i] )
+P2=ggplot(Data, aes(x=X, y=Y))+geom_line()+theme(
+ axis.text.x = element_text(face="bold",size=25),
+ axis.text.y = element_text(face="bold",size=25),
+ axis.title.x = element_text(face="bold",size=25),
+ axis.title.y = element_text(face="bold",size=25)
+)+ylab("Density")+xlab("Step-length")
+
+
+pdf(paste(PLOT_DIRPLOT ,"SimAng3.pdf",sep=""))
+print(P1)
+dev.off()
+
+pdf(paste(PLOT_DIRPLOT ,"SimLength3.pdf",sep=""))
+print(P2)
+dev.off()
+
+
+
+
+i = 4
+nn = 500
+theta_seq = seq(-pi, pi, length.out=nn)
+r_seq     = seq(0, 0.01, length.out=nn)
+
+dens_circ[,i] = dcauchy(theta_seq,par1[i],par2[i])+dcauchy(theta_seq+2*pi,par1[i],par2[i])+dcauchy(theta_seq-2*pi,par1[i],par2[i])
+dens_lin[,i]  = dweibull(r_seq,par3[i],par4[i])
+
+
+Data = data.frame("X" = theta_seq, "Y"=dens_circ[,i] )
+P1=ggplot(Data, aes(x=X, y=Y))+geom_line()+theme(
+  axis.text.x = element_text(face="bold",size=25),
+  axis.text.y = element_text(face="bold",size=25),
+  axis.title.x = element_text(face="bold",size=25),
+  axis.title.y = element_text(face="bold",size=25)
+)+ylab("Density")+xlab("Turning-Angle")
+
+
+
+Data = data.frame("X" = r_seq, "Y"=dens_lin[,i] )
+P2=ggplot(Data, aes(x=X, y=Y))+geom_line()+theme(
+ axis.text.x = element_text(face="bold",size=25),
+ axis.text.y = element_text(face="bold",size=25),
+ axis.title.x = element_text(face="bold",size=25),
+ axis.title.y = element_text(face="bold",size=25)
+)+ylab("Density")+xlab("Step-length")
+
+
+pdf(paste(PLOT_DIRPLOT ,"SimAng4.pdf",sep=""))
+print(P1)
+dev.off()
+
+pdf(paste(PLOT_DIRPLOT ,"SimLength4.pdf",sep=""))
+print(P2)
+dev.off()
+
+##### Sim
+n = 100000
+
+library(Directional)
+for(ii in 1:length(par1))
+{
+	#ii = 1
+	set.seed(100)
+	theta = rcauchy(n,par1[ii],par2[ii])%%(2*pi)
+	r     = rweibull(n,par3[ii],par4[ii])
+
+	# the path
+	s         = matrix(NA, nrow=n+1, ncol=2)
+	s[1,]    	= c(0,0)
+	angle  		= cumsum(theta)
+	for(i in 2:(n+1))
+	{
+		s[i,] = s[i-1,]+c(r[i-1]*cos(angle[i-1]), r[i-1]*sin(angle[i-1]))
+	}
+	colnames(s) = c("X","Y")
+	s = as.data.frame(s)
+	data = prepData(s,type="UTM",coordNames=c("X","Y"))
+
+	data = prepData(s[seq(1,n,by=iset[ii]),],type="UTM",coordNames=c("X","Y"))
+	dcirc = density(c(data$angle,data$angle-2*pi,data$angle+2*pi), na.rm=T, adjust=1/3)
+	dlin  = density(data$step[data$step<100], na.rm=T, from=0,adjust=1.3)
+
+	W = dcirc$x>=-pi & dcirc$x<pi
+
+	Data = data.frame("X" = dcirc$x[W], "Y"=dcirc$y[W] )
+	P1=ggplot(Data, aes(x=X, y=Y))+geom_line()+theme(
+	  axis.text.x = element_text(face="bold",size=25),
+	  axis.text.y = element_text(face="bold",size=25),
+	  axis.title.x = element_text(face="bold",size=25),
+	  axis.title.y = element_text(face="bold",size=25)
+	)+ylab("Density")+xlab("Turning-Angle")+ylim(c(0, max(dcirc$y[W])))
+	P1
+
+	Data = data.frame("X" = dlin$x, "Y"=dlin$y )
+	P2=ggplot(Data, aes(x=X, y=Y))+geom_line()+theme(
+	 axis.text.x = element_text(face="bold",size=25),
+	 axis.text.y = element_text(face="bold",size=25),
+	 axis.title.x = element_text(face="bold",size=25),
+	 axis.title.y = element_text(face="bold",size=25)
+	)+ylab("Density")+xlab("Step-length")
+	P2
+
+	pdf(paste(PLOT_DIRPLOT ,"HSimAng",ii, ".pdf",sep=""))
+	print(P1)
+	dev.off()
+
+	pdf(paste(PLOT_DIRPLOT ,"HSimLength",ii, ".pdf",sep=""))
+	print(P2)
+	dev.off()
+
+}
