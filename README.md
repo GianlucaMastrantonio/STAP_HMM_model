@@ -4,7 +4,7 @@ Models estimates can be obtained running the Julia script *"PosteriorEstimates.j
 
 
  * *"DIR"* is the directory where all the relevant codes and folders are saved;
- * *"IndModel"* is a vector with 1 element, that has value 1 if we want to estimate the STAP-HMM, value 2 for the BRW-HMM, and 3 for the CRW-HMM.
+ * *"IndModel"* is a vector with 1 element, that has value 1 if we want to estimate the STAP-HMM, value 2 for the BRW-HMM, and 3 for the CRW-HMM. 
  * The results, depending on the value of *"IndModel"*, are saved in an R object called *"NAME_STAP.Rdata"*, *"NAME_BRW.Rdata"* or *"NAME_CRW.Rdata"* in the directory *"DIR/out/"*.
 
 To automatically load the exact versions of the Julia packages, the file *"DIR/Juliapackagesversions/Manifest.toml"* should be loaded and activated before running the code. Inside the file, *"XXX"*  on line 32 must be replace with *"DIR/BayesianAnimalMovementModels.jl"*
